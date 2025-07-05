@@ -152,7 +152,7 @@ const LoginSignup = () => {
               <button
                 className="border border-white px-10 py-2 text-xs rounded-md uppercase font-semibold"
                 onClick={() => setIsActive(true)}>
-                Sign Up
+                Sign Up!
               </button>
             </div>
           </div>
