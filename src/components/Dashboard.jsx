@@ -11,6 +11,8 @@ const Dashboard = () => {
             <div className='text-white p-4'>
                 <p className='text-xl'>Your Profile:</p>
                 <p>Active Courses: 03</p>
+                <p>Active Courses: 03</p>
+
                 <p>Total XPs Gained: 2240</p>
             </div>
         </div>
