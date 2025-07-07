@@ -1,14 +1,21 @@
-import React from 'react'
-import LoginSignup from './components/LoginSignup'
-import Dashboard from './components/Dashboard'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+
+import Navbar from './components/Navbar';
+import Dashboard from './components/Dashboard';
+import LoginSignup from './components/LoginSignup';
 
 const App = () => {
   return (
-<div>
-  {/* <LoginSignup /> */}
-  <Dashboard />
-</div>
-  )
-}
+    <div className="bg-gray-100 min-h-screen">
+      <Navbar />
 
-export default App
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<LoginSignup />} />
+      </Routes>
+    </div>
+  );
+};
+
+export default App;
