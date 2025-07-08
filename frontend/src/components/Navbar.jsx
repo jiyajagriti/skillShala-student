@@ -7,7 +7,8 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-50 px-4 md:px-8">
+      {/* Navbar */}
+      <nav className="fixed top-4 left-0 right-0 z-50 max-w-6xl mx-auto px-4 rounded-xl backdrop-blur-md bg-white/30 border border-white/30 shadow-lg">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <h1 className="text-2xl font-bold text-blue-800">SkillShala</h1>
@@ -32,7 +33,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden flex flex-col space-y-4 py-4 items-center bg-white shadow-md">
+          <div className="md:hidden flex flex-col space-y-4 py-4 items-center bg-white/80 backdrop-blur-md rounded-b-xl shadow-lg">
             <Link to="/" className="hover:text-blue-700">Dashboard</Link>
             <Link to="/courses" className="hover:text-blue-700">Courses</Link>
             <Link to="/tests" className="hover:text-blue-700">Tests</Link>
@@ -43,8 +44,8 @@ const Navbar = () => {
         )}
       </nav>
 
-      {/* Spacer to prevent overlap */}
-      <div className="h-16"></div>
+      {/* Spacer to avoid content hiding behind navbar */}
+      <div className="h-20"></div>
     </div>
   );
 };

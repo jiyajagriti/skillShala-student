@@ -2,6 +2,7 @@ import React from 'react';
 import Profile from './Profile';
 import YourCourses from './YourCourses';
 import AllCourses from './AllCourses';
+import MyRewards from './MyRewards';
 
 const Dashboard = () => {
   return (
@@ -9,6 +10,7 @@ const Dashboard = () => {
       <Profile />
       <YourCourses />
       <AllCourses />
+      <MyRewards />
     </div>
   );
 };
