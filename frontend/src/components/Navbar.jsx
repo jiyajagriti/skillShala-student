@@ -18,7 +18,6 @@ const Navbar = () => {
             <Link to="/" className="hover:text-blue-700">Dashboard</Link>
             <Link to="/courses" className="hover:text-blue-700">Courses</Link>
             <Link to="/tests" className="hover:text-blue-700">Tests</Link>
-            <Link to="/users" className="hover:text-blue-700">Users</Link>
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
             <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700">Logout</button>
           </div>
