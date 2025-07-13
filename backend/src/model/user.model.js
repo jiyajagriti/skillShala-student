@@ -16,7 +16,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
     minlength: 6
-  }
+  },
+  totalXP: {
+    type: Number,
+    default: 0,
+  },
+  badges: [String],
+  lastLoginDates: [Date],
+  enrolledCourses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course"
+    }
+  ]
 });
 
 // Hash password before saving

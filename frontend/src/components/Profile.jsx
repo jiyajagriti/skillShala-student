@@ -1,6 +1,11 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
+  const { user } = useAuth();
+
+  if (!user) return <p className="px-4 py-6">Loading profile...</p>;
+
   return (
     <div className="w-full max-w-6xl px-4 mb-6">
       <div className="bg-white rounded-2xl shadow-lg p-6 flex items-center justify-between relative">
@@ -9,13 +14,16 @@ const Profile = () => {
         <div>
           <h2 className="text-lg font-semibold text-gray-800 mb-1">Your Profile</h2>
           <p className="text-sm text-gray-600">
-            Name: <span className="font-semibold text-gray-900">Jiya Jagriti</span>
+            Name: <span className="font-semibold text-gray-900">{user?.name || "Guest"}</span>
           </p>
           <p className="text-sm text-gray-600">
-            Active Courses: <span className="font-semibold text-gray-900">03</span>
+            Email: <span className="font-semibold text-gray-900">{user.email}</span>
           </p>
           <p className="text-sm text-gray-600">
-            Total XPs Gained: <span className="font-semibold text-gray-900">2240</span>
+            Active Courses: <span className="font-semibold text-gray-900">{user?.enrolledCourses?.length || 0}</span>
+          </p>
+          <p className="text-sm text-gray-600">
+            Total XPs Gained: <span className="font-semibold text-gray-900">0</span> {/* Placeholder */}
           </p>
         </div>
 

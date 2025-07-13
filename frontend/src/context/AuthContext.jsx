@@ -1,66 +1,87 @@
+// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 
-// Create the context
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
-// Custom hook to use the context
-export const useAuth = () => useContext(AuthContext);
-
-// Backend base URL
-const BASE_URL = "http://localhost:5000/api/auth"; // change if needed
-
-// Context Provider
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")) || null);
-  const [token, setToken] = useState(() => localStorage.getItem("token") || "");
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("skillshala-token") || "");
 
-  // Sign Up
-  const signup = async (formData) => {
-    const res = await fetch(`${BASE_URL}/signup`, {
+  // 🔄 Fetch user from /me using token
+  const fetchUser = async (storedToken) => {
+    try {
+      const res = await fetch("http://localhost:8000/api/v1/auth/me", {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to fetch user");
+      setUser(data);
+    } catch (err) {
+      console.error("Error loading user:", err);
+      logout();
+    }
+  };
+
+  // 🟡 Load user on mount if token exists
+  useEffect(() => {
+    if (token) fetchUser(token);
+  }, [token]);
+
+  // ✅ Signup
+  const signup = async (name, email, password) => {
+    const res = await fetch("http://localhost:8000/api/v1/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ name, email, password }),
     });
-
     const data = await res.json();
-
     if (!res.ok) throw new Error(data.message || "Signup failed");
 
-    return data;
+    localStorage.setItem("skillshala-token", data.token);
+    setToken(data.token);
+    setUser(data.user);
   };
 
-  // Login
-  const login = async (formData) => {
-    const res = await fetch(`${BASE_URL}/login`, {
+  // ✅ Login
+  const login = async (email, password) => {
+    const res = await fetch("http://localhost:8000/api/v1/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ email, password }),
     });
-
     const data = await res.json();
-
     if (!res.ok) throw new Error(data.message || "Login failed");
 
-    // Save user and token
-    setUser(data.user);
+    localStorage.setItem("skillshala-token", data.token);
     setToken(data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    localStorage.setItem("token", data.token);
-
-    return data;
+    setUser(data.user);
   };
 
-  // Logout
+  // ✅ Logout
   const logout = () => {
-    setUser(null);
+    localStorage.removeItem("skillshala-token");
     setToken("");
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    setUser(null);
+
+    localStorage.setItem("skillshala-user", JSON.stringify({
+      user: {
+        ...data.user,
+        token: data.token, // ✅ include token with user
+      },
+    }));
+    setUser({ ...data.user, token: data.token });
+
   };
+
+
 
   return (
-    <AuthContext.Provider value={{ user, token, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, signup, login, logout, token }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);

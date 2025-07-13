@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div>
@@ -16,10 +24,26 @@ const Navbar = () => {
           {/* Desktop Links */}
           <div className="hidden md:flex space-x-6 font-medium items-center text-sm">
             <Link to="/" className="hover:text-blue-700">Dashboard</Link>
-            <Link to="/courses" className="hover:text-blue-700">Courses</Link>
             <Link to="/tests" className="hover:text-blue-700">Tests</Link>
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
-            <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700">Logout</button>
+            {user ? (
+              <>
+                <Link to="/your-courses" className="hover:text-blue-700">Your Courses</Link>
+                <button
+                  onClick={handleLogout}
+                  className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile Toggle */}
@@ -34,16 +58,32 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden flex flex-col space-y-4 py-4 items-center bg-white/80 backdrop-blur-md rounded-b-xl shadow-lg">
             <Link to="/" className="hover:text-blue-700">Dashboard</Link>
-            <Link to="/courses" className="hover:text-blue-700">Courses</Link>
             <Link to="/tests" className="hover:text-blue-700">Tests</Link>
             <Link to="/users" className="hover:text-blue-700">Users</Link>
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
-            <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700">Logout</button>
+            {user ? (
+              <>
+                <Link to="/your-courses" className="hover:text-blue-700">Your Courses</Link>
+                <button
+                  onClick={handleLogout}
+                  className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+              >
+                Login
+              </Link>
+            )}
           </div>
         )}
       </nav>
 
-      {/* Spacer to avoid content hiding behind navbar */}
+      {/* Spacer */}
       <div className="h-20"></div>
     </div>
   );
