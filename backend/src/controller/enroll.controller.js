@@ -1,7 +1,8 @@
 import { User } from "../model/user.model.js";
 import { Course } from "../model/course.model.js";
+import axios from "axios";
 
-// Controller to enroll in a course
+// ✅ Enroll in a course
 export const enrollInCourse = async (req, res) => {
   const userId = req.user._id;
   const { courseId } = req.body;
@@ -16,13 +17,22 @@ export const enrollInCourse = async (req, res) => {
   user.enrolledCourses.push(courseId);
   await user.save();
 
+  // Sync to Admin Panel
+  try {
+    await axios.patch(`http://localhost:5000/api/users/${user.email}/update-course`, {
+      course: course.title,
+    });
+    console.log("✅ Synced to admin");
+  } catch (err) {
+    console.error("❌ Sync to admin failed:", err.message);
+  }
+
   res.status(200).json({
     message: "Enrolled successfully",
     enrolledCourses: user.enrolledCourses,
   });
 };
 
-// ✅ Controller to get all available courses
 export const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find({});

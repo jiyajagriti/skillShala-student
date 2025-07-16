@@ -3,8 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
 import LoginSignup from './components/LoginSignup';
-import YourCourses from './components/YourCourses'; // ✅ NEW
+import YourCourses from './components/YourCourses';
 import ProtectedRoute from './components/ProtectedRoute';
+import Queries from './components/Queries';
 
 const App = () => {
   return (
@@ -26,6 +27,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <YourCourses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/queries"
+          element={
+            <ProtectedRoute>
+              <Queries />
             </ProtectedRoute>
           }
         />

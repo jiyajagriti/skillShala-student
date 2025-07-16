@@ -17,40 +17,42 @@ const YourCourses = () => {
   const [courses, setCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
 
+  // 🔁 Fetch all available courses once
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const res = await fetch("http://localhost:8000/api/v1/courses");
         const data = await res.json();
         setCourses(data);
-
-        if (user?.enrolledCourses?.length) {
-          const filtered = data.filter((course) =>
-            user.enrolledCourses.includes(course._id)
-          );
-          setEnrolledCourses(filtered);
-        }
       } catch (err) {
         console.error("Error fetching courses", err);
       }
     };
 
     fetchCourses();
-  }, [user]);
+  }, []);
+
+  // ✅ Filter enrolled courses when user or courses change
+  useEffect(() => {
+    if (user?.enrolledCourses?.length && courses.length) {
+      const filtered = courses.filter((course) =>
+        user.enrolledCourses.includes(course._id)
+      );
+      setEnrolledCourses(filtered);
+    } else {
+      setEnrolledCourses([]);
+    }
+  }, [user?.enrolledCourses, courses]);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-800">Your Courses</h2>
-        <p className="text-sm text-gray-500 hover:underline cursor-pointer">
-          More...
-        </p>
+        <p className="text-sm text-gray-500 hover:underline cursor-pointer">More...</p>
       </div>
 
       {enrolledCourses.length === 0 ? (
-        <p className="text-sm text-gray-600">
-          You haven’t enrolled in any courses yet.
-        </p>
+        <p className="text-sm text-gray-600">You haven’t enrolled in any courses yet.</p>
       ) : (
         <div className="flex gap-4 overflow-x-auto pb-2">
           {enrolledCourses.map((course, index) => (

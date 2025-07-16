@@ -25,6 +25,7 @@ const Navbar = () => {
           <div className="hidden md:flex space-x-6 font-medium items-center text-sm">
             <Link to="/" className="hover:text-blue-700">Dashboard</Link>
             <Link to="/tests" className="hover:text-blue-700">Tests</Link>
+            <Link to="/queries" className="hover:text-blue-700">Queries</Link> {/* ✅ Added */}
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
             {user ? (
               <>
@@ -59,6 +60,7 @@ const Navbar = () => {
           <div className="md:hidden flex flex-col space-y-4 py-4 items-center bg-white/80 backdrop-blur-md rounded-b-xl shadow-lg">
             <Link to="/" className="hover:text-blue-700">Dashboard</Link>
             <Link to="/tests" className="hover:text-blue-700">Tests</Link>
+            <Link to="/queries" className="hover:text-blue-700">Queries</Link> {/* ✅ Added */}
             <Link to="/users" className="hover:text-blue-700">Users</Link>
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
             {user ? (

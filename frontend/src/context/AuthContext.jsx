@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     if (token) fetchUser(token);
   }, [token]);
 
-  // ✅ Signup
+  // Signup
   const signup = async (name, email, password) => {
     const res = await fetch("http://localhost:8000/api/v1/auth/signup", {
       method: "POST",
@@ -38,13 +38,19 @@ export const AuthProvider = ({ children }) => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Signup failed");
-
+  
     localStorage.setItem("skillshala-token", data.token);
+    localStorage.setItem(
+      "skillshala-user",
+      JSON.stringify({ user: data.user, token: data.token })
+    );
+  
     setToken(data.token);
     setUser(data.user);
   };
+  
 
-  // ✅ Login
+  // Login
   const login = async (email, password) => {
     const res = await fetch("http://localhost:8000/api/v1/auth/login", {
       method: "POST",
@@ -53,32 +59,33 @@ export const AuthProvider = ({ children }) => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Login failed");
-
+  
     localStorage.setItem("skillshala-token", data.token);
+    localStorage.setItem(
+      "skillshala-user",
+      JSON.stringify({ user: data.user, token: data.token })
+    );
+  
     setToken(data.token);
     setUser(data.user);
   };
+  
 
-  // ✅ Logout
+  // Logout
   const logout = () => {
     localStorage.removeItem("skillshala-token");
+    localStorage.removeItem("skillshala-user");
     setToken("");
     setUser(null);
-
-    localStorage.setItem("skillshala-user", JSON.stringify({
-      user: {
-        ...data.user,
-        token: data.token, // ✅ include token with user
-      },
-    }));
-    setUser({ ...data.user, token: data.token });
-
   };
+  
 
 
 
   return (
-    <AuthContext.Provider value={{ user, signup, login, logout, token }}>
+    <AuthContext.Provider
+      value={{ user, setUser, signup, login, logout, token }}
+    >
       {children}
     </AuthContext.Provider>
   );
