@@ -97,6 +97,7 @@ const LoginSignup = () => {
                 setSignupData({ ...signupData, password: e.target.value })
               }
               className="w-full my-2 px-4 py-2 text-sm rounded-md bg-[#eee] outline-none"
+              
             />
             <button
               onClick={handleSignup}

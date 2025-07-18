@@ -1,4 +1,3 @@
-// src/components/AllCourses.jsx
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
@@ -29,7 +28,7 @@ const AllCourses = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("skillshala-user") ? JSON.parse(localStorage.getItem("skillshala-user")).token : ""}`
+          Authorization: `Bearer ${localStorage.getItem("skillshala-token")}`,
         },
         body: JSON.stringify({ courseId }),
       });
