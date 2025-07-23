@@ -16,7 +16,8 @@ router.get("/", asyncHandler(async (req, res) => {
 // Keep it only if students are allowed to suggest a course
 
 // Enroll in a course
-router.post("/enroll", asyncHandler(enrollInCourse));
+
+router.post("/enroll", protect, asyncHandler(enrollInCourse));
 
 router.post("/sync", asyncHandler(async (req, res) => {
   const incomingCourse = req.body;
@@ -33,7 +34,5 @@ router.post("/sync", asyncHandler(async (req, res) => {
   await course.save();
   res.status(201).json({ message: "Course synced to student DB" });
 }));
-
-router.post("/enroll", protect, asyncHandler(enrollInCourse));
 
 export default router;
