@@ -1,4 +1,3 @@
-// student-backend/routes/query.routes.js
 
 import express from "express";
 import axios from "axios";
