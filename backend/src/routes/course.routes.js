@@ -1,38 +1,25 @@
 import express from "express";
-import { Course } from "../model/course.model.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import {
+  syncCourse,
+  getAllCourses,
+  getCourseById
+} from "../controller/course.controller.js";
 import { enrollInCourse } from "../controller/enroll.controller.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// GET only approved courses (for students)
-router.get("/", asyncHandler(async (req, res) => {
-  const courses = await Course.find({ status: "approved" });
-  res.json(courses);
-}));
+// POST /api/v1/courses/sync
+router.post("/sync", asyncHandler(syncCourse));
 
-// POST a course — usually not needed in student backend
-// Keep it only if students are allowed to suggest a course
+// GET /api/v1/courses - all courses
+router.get("/", asyncHandler(getAllCourses));
 
-// Enroll in a course
+// GET /api/v1/courses/:id - single course detail
+router.get("/:id", asyncHandler(getCourseById));
 
+// POST /api/v1/courses/enroll - enroll in a course
 router.post("/enroll", protect, asyncHandler(enrollInCourse));
-
-router.post("/sync", asyncHandler(async (req, res) => {
-  const incomingCourse = req.body;
-
-  // Upsert logic: update if exists, else insert
-  const existing = await Course.findById(incomingCourse._id);
-
-  if (existing) {
-    await Course.findByIdAndUpdate(incomingCourse._id, incomingCourse);
-    return res.status(200).json({ message: "Course updated" });
-  }
-
-  const course = new Course(incomingCourse);
-  await course.save();
-  res.status(201).json({ message: "Course synced to student DB" });
-}));
 
 export default router;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const bgColors = [
   "bg-green-600",
@@ -16,12 +17,12 @@ const YourCourses = () => {
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const navigate = useNavigate(); // ✅ For navigation to detail page
 
-  // 🔁 Fetch all available courses once
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/v1/courses");
+        const res = await fetch("http://localhost:8000/api/v1/courses");
         const data = await res.json();
         setCourses(data);
       } catch (err) {
@@ -32,7 +33,6 @@ const YourCourses = () => {
     fetchCourses();
   }, []);
 
-  // ✅ Filter enrolled courses when user or courses change
   useEffect(() => {
     if (user?.enrolledCourses?.length && courses.length) {
       const filtered = courses.filter((course) =>
@@ -66,14 +66,17 @@ const YourCourses = () => {
                 <div className="bg-white/30 text-white font-bold rounded px-2 py-1 text-xs">
                   {String.fromCharCode(65 + index)}{index + 1}
                 </div>
-                <div>
-                  <div className="text-sm font-bold">{course.title.split(" ")[0]}</div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/course/${course._id}`)} // ✅ Navigate to course detail
+                >
+                  <div className="text-sm font-bold hover:underline">{course.title.split(" ")[0]}</div>
                   <div className="text-xs">{course.title.split(" ").slice(1).join(" ")}</div>
                 </div>
               </div>
               <div className="text-xs opacity-80">
                 <p>Level: {course.level}</p>
-                <p>Duration: {course.duration}</p>
+                <p>Duration: {course.duration || "N/A"}</p>
               </div>
             </div>
           ))}

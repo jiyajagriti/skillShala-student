@@ -1,6 +1,7 @@
 import { User } from "../model/user.model.js";
 import jwt from "jsonwebtoken";
-import axios from "axios"; // ✅ required to sync with admin backend
+import axios from "axios";
+import { uploadToCloudinary } from "../utils/cloudinary.js"; // ✅ Cloudinary helper
 
 // Token utility
 const generateToken = (userId) => {
@@ -41,6 +42,8 @@ export const signup = async (req, res) => {
         name: user.name,
         email: user.email,
         enrolledCourses: user.enrolledCourses || [],
+        profilePic: user.profilePic || "",
+        totalXP: user.totalXP || 0,
       },
     });
   } catch (err) {
@@ -64,6 +67,8 @@ export const login = async (req, res) => {
       name: user.name,
       email: user.email,
       enrolledCourses: user.enrolledCourses || [],
+      profilePic: user.profilePic || "",
+      totalXP: user.totalXP || 0,
     },
   });
 };
@@ -73,5 +78,29 @@ export const getMe = async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
   if (!user) return res.status(404).json({ message: "User not found" });
 
-  res.status(200).json(user);
+  res.status(200).json(user); // ✅ this should include user.profilePic
+};
+
+
+// ✅ Update profile picture controller
+export const updateProfilePic = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No image provided" });
+    }
+
+    const upload = await uploadToCloudinary(req.file.path, "profile-pics");
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: upload.secure_url },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Profile picture updated", profilePic: user.profilePic });
+  } catch (err) {
+    console.error("Update profile pic error:", err.message);
+    res.status(500).json({ message: "Failed to update profile picture" });
+  }
 };

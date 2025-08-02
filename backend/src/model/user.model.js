@@ -21,6 +21,19 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  xpHistory: [
+    {
+      date: String,
+      xp: Number,  
+    },
+  ],
+  completedVideos: [
+    {
+      courseId: String,
+      videoId: String,
+      date: Date,
+    },
+  ],
   badges: [String],
   lastLoginDates: [Date],
   enrolledCourses: [

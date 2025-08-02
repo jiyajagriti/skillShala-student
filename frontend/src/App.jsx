@@ -1,11 +1,14 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
 import LoginSignup from './components/LoginSignup';
 import YourCourses from './components/YourCourses';
 import ProtectedRoute from './components/ProtectedRoute';
 import Queries from './components/Queries';
+import CourseDetail from "./components/CourseDetail";
+import EnrollForm from "./components/EnrollForm";
+import Certificate from './pages/Certificate';
 
 const App = () => {
   return (
@@ -39,7 +42,28 @@ const App = () => {
           }
         />
 
-        {/* Public Route */}
+        <Route path="/course/:id" element={<CourseDetail />} />
+
+        <Route
+          path="/enroll/:id"
+          element={
+            <ProtectedRoute>
+              <EnrollForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/certificate/:courseId"
+          element={
+            <ProtectedRoute>
+              <Certificate />
+            </ProtectedRoute>
+          }
+        />
+
+          <Route path="/certificates" element={<Navigate to="/" replace />} />
+
+
         <Route path="/login" element={<LoginSignup />} />
       </Routes>
     </div>

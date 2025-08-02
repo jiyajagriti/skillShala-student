@@ -27,6 +27,8 @@ const Navbar = () => {
             <Link to="/tests" className="hover:text-blue-700">Tests</Link>
             <Link to="/queries" className="hover:text-blue-700">Queries</Link> {/* ✅ Added */}
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
+            <Link to="/your-courses" className="hover:text-blue-600">Certificates</Link>
+
             {user ? (
               <>
                 <Link to="/your-courses" className="hover:text-blue-700">Your Courses</Link>
@@ -63,6 +65,8 @@ const Navbar = () => {
             <Link to="/queries" className="hover:text-blue-700">Queries</Link> {/* ✅ Added */}
             <Link to="/users" className="hover:text-blue-700">Users</Link>
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
+            <Link to="/certificates" className="hover:text-blue-600">Certificates</Link>
+
             {user ? (
               <>
                 <Link to="/your-courses" className="hover:text-blue-700">Your Courses</Link>

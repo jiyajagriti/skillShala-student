@@ -3,7 +3,6 @@ import { User } from "../model/user.model.js";
 
 export const protect = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log("🔐 Authorization Header:", authHeader);
 
   const token = authHeader?.split(" ")[1];
 

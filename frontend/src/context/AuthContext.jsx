@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios"; // ✅ Added missing import
 
 const AuthContext = createContext();
 
@@ -10,7 +11,6 @@ export const AuthProvider = ({ children }) => {
 
   const [token, setToken] = useState(() => localStorage.getItem("skillshala-token") || "");
 
-  // ✅ Optional: Re-validate user on refresh
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
         if (!res.ok) throw new Error("Token expired");
         setUser(data);
       } catch (err) {
-        console.warn("Auto-login failed, logging out:", err.message);
-        logout(); // Expired or invalid token
+        console.warn("Auto-login failed:", err.message);
+        logout();
       }
     };
 
@@ -66,8 +66,32 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const refreshUser = async () => {
+    const token = localStorage.getItem("skillshala-token");
+    if (!token) {
+      console.warn("❌ No token found in localStorage");
+      return;
+    }
+  
+    try {
+      const res = await axios.get("http://localhost:8000/api/v1/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUser(res.data);
+  
+      // ✅ Update localStorage with latest user data
+      localStorage.setItem("skillshala-user", JSON.stringify({ user: res.data }));
+  
+    } catch (err) {
+      console.error("❌ Failed to refresh user:", err.message);
+    }
+  };
+
+  
   return (
-    <AuthContext.Provider value={{ user, setUser, token, signup, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, token, signup, login, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

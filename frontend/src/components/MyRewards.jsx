@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CountUp from "react-countup";
 import {
   ResponsiveContainer,
@@ -11,13 +11,18 @@ import {
 } from "recharts";
 import { Gift, Star, Flame } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import confetti from "canvas-confetti";
 
 const MyRewards = () => {
   const { token } = useAuth();
   const [xp, setXP] = useState(0);
   const [streak, setStreak] = useState(0);
-  const [badges, setBadges] = useState({ unlocked: [], locked: [] });
+  const [certificates, setCertificates] = useState([]); // replaces badges
   const [xpHistory, setXpHistory] = useState([]);
+
+  const prevStreakRef = useRef(0);
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -26,10 +31,29 @@ const MyRewards = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
+
+        // 🎉 Toast + confetti for new streak
+        if (data.streak > prevStreakRef.current) {
+          toast.success(`🔥 You've maintained a ${data.streak}-day streak!`, {
+            icon: "🔥",
+            position: "bottom-right",
+            autoClose: 3000,
+            className: "animated-toast",
+          });
+
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { x: 1, y: 1 },
+            scalar: 0.8,
+          });
+        }
+
         setXP(data.totalXP);
         setStreak(data.streak);
-        setBadges(data.badges);
-        setXpHistory(data.xpHistory);
+        setCertificates(data.badges?.unlocked || []); // course titles as certificates
+        setXpHistory(data.xpHistory || []);
+        prevStreakRef.current = data.streak;
       } catch (err) {
         console.error("Failed to load rewards:", err);
       }
@@ -38,13 +62,6 @@ const MyRewards = () => {
     if (token) fetchRewards();
   }, [token]);
 
-  const badgeIcons = {
-    "HTML Pro": "/html.png",
-    "CSS Master": "/css.png",
-    "JavaScript Guru": "/js.png",
-    "React Star": "/react.png",
-  };
-
   return (
     <div className="min-h-screen w-full text-black py-10 px-4">
       <div className="max-w-6xl mx-auto backdrop-blur-md bg-white/80 border border-gray-100 rounded-xl shadow-xl p-6">
@@ -52,9 +69,6 @@ const MyRewards = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">My Rewards</h2>
-          <button className="text-sm text-orange-500 hover:underline">
-            View All Rewards
-          </button>
         </div>
 
         {/* Stats */}
@@ -68,9 +82,9 @@ const MyRewards = () => {
           </div>
           <div className="bg-white shadow-md rounded-lg p-4">
             <Star className="mx-auto mb-2 text-yellow-500" size={28} />
-            <p className="text-sm text-gray-600">Badges Earned</p>
+            <p className="text-sm text-gray-600">Certificates</p>
             <p className="text-2xl font-bold text-gray-900">
-              <CountUp end={badges.unlocked.length} duration={2} />
+              <CountUp end={certificates.length} duration={2} />
             </p>
           </div>
           <div className="bg-white shadow-md rounded-lg p-4">
@@ -90,52 +104,42 @@ const MyRewards = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
               <XAxis dataKey="day" stroke="#333" />
               <YAxis stroke="#333" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#f3f4f6",
-                  border: "1px solid #e5e7eb",
-                  color: "#111827",
-                }}
-              />
+              <Tooltip contentStyle={{ backgroundColor: "#f3f4f6", border: "1px solid #e5e7eb" }} />
               <Line type="monotone" dataKey="xp" stroke="#3b82f6" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Badges */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* Unlocked */}
-          <div>
-            <p className="text-sm font-semibold mb-2 text-gray-700">Unlocked Badges</p>
-            <div className="flex gap-4 flex-wrap">
-              {badges.unlocked.map((name, idx) => (
+        {/* Certificates Section */}
+        <div className="mt-10">
+          <h3 className="text-md font-semibold mb-3 text-gray-700">Certificates Earned</h3>
+          <div className="flex gap-4 flex-wrap">
+            {certificates.length > 0 ? (
+              certificates.map((cert, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col items-center bg-white shadow-sm border border-gray-200 p-3 rounded-lg hover:scale-105 transition-transform"
+                  className="bg-white shadow-md border border-gray-200 p-4 rounded-lg w-64 flex flex-col justify-between"
                 >
-                  <img src={badgeIcons[name]} alt={name} className="w-12 h-12" />
-                  <p className="text-xs mt-1 text-blue-700">{name}</p>
+                  <div className="text-blue-700 font-semibold mb-2 text-sm truncate">
+                    {cert.courseTitle}
+                  </div>
+                  <p className="text-xs text-gray-600 mb-4">Certificate of Completion</p>
+                  <a
+                    href={`/certificate/${cert.courseId}`}
+                    className="text-center bg-green-600 hover:bg-green-700 text-white text-sm py-1 rounded"
+                  >
+                    View Certificate
+                  </a>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Locked */}
-          <div>
-            <p className="text-sm font-semibold mb-2 text-gray-700">Locked Badges</p>
-            <div className="bg-gray-100 rounded-lg p-4 shadow-inner grid grid-cols-2 gap-4">
-              {badges.locked.map((name, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col items-center opacity-40 grayscale"
-                >
-                  <img src={badgeIcons[name]} alt={name} className="w-12 h-12" />
-                  <p className="text-xs mt-1 text-gray-500">{name}</p>
-                </div>
-              ))}
-            </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">No certificates earned yet.</p>
+            )}
           </div>
         </div>
+
+
+        <ToastContainer />
       </div>
     </div>
   );
