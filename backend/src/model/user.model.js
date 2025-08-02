@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
     minlength: 6
   },
+  profilePic: {
+    type: String,
+    default: ""
+  },
   totalXP: {
     type: Number,
     default: 0,

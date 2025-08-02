@@ -2,40 +2,109 @@ import React from "react";
 
 const CertificateTemplate = ({ studentName, courseName, completionDate }) => {
   return (
-    <div className="w-[1000px] h-[700px] mx-auto p-10 bg-[#fdfdfd] border-[12px] border-yellow-400 shadow-lg relative font-serif">
-      <div className="absolute top-5 bottom-5 left-5 right-5 border-4 border-dashed border-yellow-300 rounded-xl pointer-events-none"></div>
+    <div style={{
+      width: '1000px',
+      height: '700px',
+      margin: '0 auto',
+      padding: '40px',
+      backgroundColor: '#fdfdfd',
+      border: '12px solid #fbbf24',
+      borderRadius: '8px',
+      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+      position: 'relative',
+      fontFamily: 'serif',
+      minWidth: '1000px',
+      minHeight: '700px'
+    }}>
+      <div style={{
+        position: 'absolute',
+        top: '20px',
+        bottom: '20px',
+        left: '20px',
+        right: '20px',
+        border: '4px dashed #fcd34d',
+        borderRadius: '12px',
+        pointerEvents: 'none'
+      }}></div>
 
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-gray-800">Certificate of Completion</h1>
-        <p className="text-lg text-gray-600 mt-2 italic">This is to certify that</p>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ 
+          fontSize: '36px', 
+          fontWeight: 'bold', 
+          color: '#1f2937',
+          margin: '0'
+        }}>
+          Certificate of Completion
+        </h1>
+        <p style={{ 
+          fontSize: '18px', 
+          color: '#4b5563', 
+          marginTop: '8px', 
+          fontStyle: 'italic',
+          margin: '8px 0 0 0'
+        }}>
+          This is to certify that
+        </p>
       </div>
 
-      <div className="text-center my-6">
-        <h2 className="text-3xl font-semibold text-blue-800 underline decoration-yellow-400 underline-offset-8">
+      <div style={{ textAlign: 'center', margin: '24px 0' }}>
+        <h2 style={{ 
+          fontSize: '30px', 
+          fontWeight: '600', 
+          color: '#1e40af',
+          textDecoration: 'underline',
+          textDecorationColor: '#fbbf24',
+          textUnderlineOffset: '8px',
+          margin: '0'
+        }}>
           {studentName}
         </h2>
       </div>
 
-      <div className="text-center my-6">
-        <p className="text-lg text-gray-700">has successfully completed the course</p>
-        <h3 className="text-2xl font-bold text-gray-800 mt-2">{courseName}</h3>
+      <div style={{ textAlign: 'center', margin: '24px 0' }}>
+        <p style={{ 
+          fontSize: '18px', 
+          color: '#374151',
+          margin: '0'
+        }}>
+          has successfully completed the course
+        </p>
+        <h3 style={{ 
+          fontSize: '24px', 
+          fontWeight: 'bold', 
+          color: '#1f2937', 
+          marginTop: '8px',
+          margin: '8px 0 0 0'
+        }}>
+          {courseName}
+        </h3>
       </div>
 
-      <div className="absolute bottom-10 left-10 right-10 flex justify-between items-center text-sm text-gray-700">
+      <div style={{
+        position: 'absolute',
+        bottom: '40px',
+        left: '40px',
+        right: '40px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        fontSize: '14px',
+        color: '#374151'
+      }}>
         <div>
-          <p className="font-medium">Date:</p>
-          <p>{completionDate}</p>
+          <p style={{ fontWeight: '500', margin: '0' }}>Date:</p>
+          <p style={{ margin: '0' }}>{completionDate}</p>
         </div>
 
-        <div className="text-center">
-          <img src="./public/logo.png" alt="Logo" className="w-20 mx-auto mb-2" />
-          <p className="font-bold text-sm text-gray-800">SkillShala</p>
+        <div style={{ textAlign: 'center' }}>
+          <img src="/logo.png" alt="Logo" style={{ width: '80px', margin: '0 auto 8px auto', display: 'block' }} />
+          <p style={{ fontWeight: 'bold', fontSize: '14px', color: '#1f2937', margin: '0' }}>SkillShala</p>
         </div>
 
-        <div className="text-right">
-          <p className="font-medium">Authorized Signature</p>
-          <div className="w-32 h-[1px] bg-gray-400 my-1" />
-          <p className="italic">Head of Training</p>
+        <div style={{ textAlign: 'right' }}>
+          <p style={{ fontWeight: '500', margin: '0' }}>Authorized Signature</p>
+          <div style={{ width: '128px', height: '1px', backgroundColor: '#9ca3af', margin: '4px 0' }} />
+          <p style={{ fontStyle: 'italic', margin: '0' }}>Head of Training</p>
         </div>
       </div>
     </div>

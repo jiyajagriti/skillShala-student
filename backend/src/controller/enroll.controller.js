@@ -41,6 +41,20 @@ export const enrollInCourse = async (req, res) => {
 
     // Add course to user's enrolledCourses array
     user.enrolledCourses.push(courseId);
+    
+    // Update activity streak on course enrollment (meaningful action)
+    const today = new Date().toDateString();
+    if (!user.lastLoginDates) {
+      user.lastLoginDates = [];
+    }
+    if (!user.lastLoginDates.includes(today)) {
+      user.lastLoginDates.push(today);
+      if (user.lastLoginDates.length > 30) {
+        user.lastLoginDates = user.lastLoginDates.slice(-30);
+      }
+      console.log(`📅 Updated activity streak for user ${user.name} after course enrollment`);
+    }
+    
     await user.save();
     console.log("✅ Course added to user");
 

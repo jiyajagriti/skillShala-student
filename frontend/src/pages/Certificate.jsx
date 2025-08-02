@@ -19,6 +19,8 @@ const Certificate = () => {
         setCourse(res.data);
       } catch (err) {
         console.error("Failed to load course:", err.message);
+        // Show user-friendly error message
+        alert("Failed to load course details. Please try again.");
       }
     };
 
@@ -27,13 +29,24 @@ const Certificate = () => {
 
   const handleDownload = async () => {
     try {
-      const canvas = await html2canvas(certRef.current);
+      const canvas = await html2canvas(certRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#fdfdfd',
+        logging: false,
+        removeContainer: true,
+        foreignObjectRendering: false
+      });
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("landscape", "px", [1000, 700]);
-      pdf.addImage(imgData, "PNG", 0, 0, 1000, 700);
+      const pdf = new jsPDF("landscape", "mm", [297, 210]); // A4 landscape
+      const imgWidth = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save(`Certificate-${course.title}.pdf`);
     } catch (err) {
       console.error("PDF download failed:", err.message);
+      alert("Failed to download certificate. Please try again.");
     }
   };
 

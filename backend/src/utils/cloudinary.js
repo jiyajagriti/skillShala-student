@@ -1,5 +1,4 @@
 import cloudinary from "cloudinary";
-import fs from "fs";
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -7,12 +6,20 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadToCloudinary = async (localPath, folder) => {
+export const uploadToCloudinary = async (fileBuffer, folder) => {
   try {
-    const result = await cloudinary.v2.uploader.upload(localPath, { folder });
-    fs.unlinkSync(localPath); // delete local file after upload
+    // Convert buffer to base64
+    const base64String = fileBuffer.toString('base64');
+    const dataURI = `data:image/jpeg;base64,${base64String}`;
+    
+    const result = await cloudinary.v2.uploader.upload(dataURI, { 
+      folder,
+      resource_type: 'image'
+    });
+    
     return result;
   } catch (err) {
+    console.error("Cloudinary upload error:", err);
     throw err;
   }
 };

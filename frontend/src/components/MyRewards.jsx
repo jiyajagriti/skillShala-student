@@ -22,7 +22,10 @@ const MyRewards = () => {
   const [certificates, setCertificates] = useState([]); // replaces badges
   const [xpHistory, setXpHistory] = useState([]);
 
-  const prevStreakRef = useRef(0);
+  // Function to clear all toasts
+  const clearAllToasts = () => {
+    toast.dismiss();
+  };
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -32,12 +35,18 @@ const MyRewards = () => {
         });
         const data = await res.json();
 
-        // 🎉 Toast + confetti for new streak
-        if (data.streak > prevStreakRef.current) {
+        console.log("📊 Rewards data received:", data);
+        
+        // Show toast notification on every page refresh if user has a streak
+        if (data.streak > 0) {
           toast.success(`🔥 You've maintained a ${data.streak}-day streak!`, {
             icon: "🔥",
             position: "bottom-right",
-            autoClose: 3000,
+            autoClose: 5000, // Auto close after 5 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
             className: "animated-toast",
           });
 
@@ -51,9 +60,8 @@ const MyRewards = () => {
 
         setXP(data.totalXP);
         setStreak(data.streak);
-        setCertificates(data.badges?.unlocked || []); // course titles as certificates
-        setXpHistory(data.xpHistory || []);
-        prevStreakRef.current = data.streak;
+        setCertificates(data.certificates || []); // actual certificates from backend
+        setXpHistory(data.xpHistory || []); // XP history for chart
       } catch (err) {
         console.error("Failed to load rewards:", err);
       }
@@ -69,6 +77,13 @@ const MyRewards = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">My Rewards</h2>
+          <button
+            onClick={clearAllToasts}
+            className="text-sm text-gray-500 hover:text-gray-700 px-2 py-1 rounded"
+            title="Clear notifications"
+          >
+            Clear Notifications
+          </button>
         </div>
 
         {/* Stats */}
@@ -99,15 +114,21 @@ const MyRewards = () => {
         {/* XP Chart */}
         <div className="bg-white p-4 rounded-lg shadow-md mb-8">
           <p className="text-sm font-semibold mb-2 text-gray-700">XP History (Last 7 Days)</p>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={xpHistory}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-              <XAxis dataKey="day" stroke="#333" />
-              <YAxis stroke="#333" />
-              <Tooltip contentStyle={{ backgroundColor: "#f3f4f6", border: "1px solid #e5e7eb" }} />
-              <Line type="monotone" dataKey="xp" stroke="#3b82f6" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
+          {xpHistory.length > 0 ? (
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={xpHistory}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+                <XAxis dataKey="day" stroke="#333" />
+                <YAxis stroke="#333" />
+                <Tooltip contentStyle={{ backgroundColor: "#f3f4f6", border: "1px solid #e5e7eb" }} />
+                <Line type="monotone" dataKey="xp" stroke="#3b82f6" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[200px] flex items-center justify-center text-gray-500">
+              <p>No XP data available yet</p>
+            </div>
+          )}
         </div>
 
         {/* Certificates Section */}
@@ -139,7 +160,18 @@ const MyRewards = () => {
         </div>
 
 
-        <ToastContainer />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </div>
   );

@@ -60,6 +60,20 @@ export const login = async (req, res) => {
   if (!user || !(await user.matchPassword(password)))
     return res.status(401).json({ message: "Invalid credentials" });
 
+  // Update activity streak on login (meaningful action)
+  const today = new Date().toDateString();
+  if (!user.lastLoginDates) {
+    user.lastLoginDates = [];
+  }
+  if (!user.lastLoginDates.includes(today)) {
+    user.lastLoginDates.push(today);
+    if (user.lastLoginDates.length > 30) {
+      user.lastLoginDates = user.lastLoginDates.slice(-30);
+    }
+    console.log(`📅 Updated activity streak for user ${user.name} on login`);
+  }
+  await user.save();
+
   res.json({
     token: generateToken(user._id),
     user: {
@@ -91,7 +105,13 @@ export const updateProfilePic = async (req, res) => {
       return res.status(400).json({ message: "No image provided" });
     }
 
-    const upload = await uploadToCloudinary(req.file.path, "profile-pics");
+    // Check if Cloudinary credentials are configured
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      console.error("Cloudinary credentials not configured");
+      return res.status(500).json({ message: "Image upload service not configured" });
+    }
+
+    const upload = await uploadToCloudinary(req.file.buffer, "profile-pics");
     const user = await User.findByIdAndUpdate(
       userId,
       { profilePic: upload.secure_url },

@@ -48,13 +48,25 @@ export const completeVideo = async (req, res) => {
       user.xpHistory.push({ date: today, xp: 10 });
     }
 
+    // 5. Update activity streak (meaningful action)
+    if (!user.lastLoginDates) {
+      user.lastLoginDates = [];
+    }
+    if (!user.lastLoginDates.includes(today)) {
+      user.lastLoginDates.push(today);
+      if (user.lastLoginDates.length > 30) {
+        user.lastLoginDates = user.lastLoginDates.slice(-30);
+      }
+      console.log(`📅 Updated activity streak for user ${user.name} after video completion`);
+    }
+
     await user.save();
 
-    // 5. Check if all videos of course are completed
+    // 6. Check if all videos of course are completed
     const completedVideos = user.completedVideos.filter(v => v.courseId === courseId);
     const allVideosWatched = completedVideos.length === course.videos.length;
 
-    // 6. If completed, generate certificate (if not already)
+    // 7. If completed, generate certificate (if not already)
     if (allVideosWatched) {
       const alreadyIssued = await Certificate.findOne({ userId, courseId });
       if (!alreadyIssued) {

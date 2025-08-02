@@ -61,7 +61,7 @@ const App = () => {
           }
         />
 
-          <Route path="/certificates" element={<Navigate to="/" replace />} />
+          <Route path="/certificates" element={<Navigate to="/your-courses" replace />} />
 
 
         <Route path="/login" element={<LoginSignup />} />
