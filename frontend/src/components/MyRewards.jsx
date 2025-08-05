@@ -30,7 +30,7 @@ const MyRewards = () => {
   useEffect(() => {
     const fetchRewards = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/v1/auth/rewards", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/rewards`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

@@ -60,7 +60,7 @@ export const enrollInCourse = async (req, res) => {
 
     // 🔄 Sync to Admin Panel
     try {
-      await axios.patch(`http://localhost:5000/api/users/${user.email}/update-course`, {
+      await axios.patch(`https://skillshala-admin-seller-backend.onrender.com/api/users/${user.email}/update-course`, {
         course: course.title,
       });
       console.log("✅ Synced to admin backend");

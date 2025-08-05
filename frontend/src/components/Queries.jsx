@@ -9,7 +9,7 @@ const Queries = () => {
 
   const fetchQueries = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/queries");
+      const res = await fetch("https://skillshala-admin-seller-backend.onrender.com/api/queries");
       const data = await res.json();
       setQueries(data.filter(q => q.studentEmail === user?.email));
     } catch (err) {
@@ -24,7 +24,7 @@ const Queries = () => {
     if (!question.trim()) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/queries", {
+      const res = await fetch("https://skillshala-admin-seller-backend.onrender.com/api/queries", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

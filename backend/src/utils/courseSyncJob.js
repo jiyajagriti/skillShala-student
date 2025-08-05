@@ -7,11 +7,11 @@ export const startCourseSyncJob = () => {
     try {
       console.log("🔄 Syncing courses from Admin...");
 
-      const res = await axios.get("http://localhost:5000/api/v1/courses");
+      const res = await axios.get("https://skillshala-admin-seller-backend.onrender.com/api/v1/courses");
       const courses = res.data;
 
       for (const course of courses) {
-        await axios.post("http://localhost:8000/api/v1/courses/sync", course);
+        await axios.post(`${process.env.BACKEND_URL}/api/v1/courses/sync`, course);
       }
 
       console.log(`✅ Synced ${courses.length} courses to student DB`);

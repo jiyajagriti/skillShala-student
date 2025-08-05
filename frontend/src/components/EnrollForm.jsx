@@ -13,7 +13,7 @@ const EnrollForm = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/v1/courses/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/courses/${id}`);
         setCourse(res.data);
       } catch (err) {
         console.error("Error fetching course:", err.message);
@@ -26,7 +26,7 @@ const EnrollForm = () => {
     try {
       setLoading(true);
       await axios.post(
-        "http://localhost:8000/api/v1/enroll",
+        `${import.meta.env.VITE_API_URL}/api/v1/enroll`,
         { courseId: course._id },
         {
           headers: {

@@ -24,8 +24,7 @@ const Navbar = () => {
           {/* Desktop Links */}
           <div className="hidden md:flex space-x-6 font-medium items-center text-sm">
             <Link to="/" className="hover:text-blue-700">Dashboard</Link>
-            <Link to="/tests" className="hover:text-blue-700">Tests</Link>
-            <Link to="/queries" className="hover:text-blue-700">Queries</Link> {/* ✅ Added */}
+            <Link to="/queries" className="hover:text-blue-700">Queries</Link>
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
             <Link to="/your-courses" className="hover:text-blue-600">Certificates</Link>
 
@@ -61,8 +60,7 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden flex flex-col space-y-4 py-4 items-center bg-white/80 backdrop-blur-md rounded-b-xl shadow-lg">
             <Link to="/" className="hover:text-blue-700">Dashboard</Link>
-            <Link to="/tests" className="hover:text-blue-700">Tests</Link>
-            <Link to="/queries" className="hover:text-blue-700">Queries</Link> {/* ✅ Added */}
+            <Link to="/queries" className="hover:text-blue-700">Queries</Link>
             <Link to="/users" className="hover:text-blue-700">Users</Link>
             <Link to="/profile" className="hover:text-blue-700">Profile</Link>
             <Link to="/certificates" className="hover:text-blue-600">Certificates</Link>

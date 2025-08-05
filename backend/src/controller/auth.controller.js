@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
 
     // ✅ Sync to Admin Panel backend
     try {
-      await axios.post("http://localhost:5000/api/users", {
+      await axios.post("https://skillshala-admin-seller-backend.onrender.com/api/users", {
         name,
         email,
         course: "",

@@ -15,7 +15,7 @@ const Certificate = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/v1/courses/${courseId}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/courses/${courseId}`);
         setCourse(res.data);
       } catch (err) {
         console.error("Failed to load course:", err.message);

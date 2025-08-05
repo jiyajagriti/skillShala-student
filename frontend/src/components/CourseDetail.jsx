@@ -18,7 +18,7 @@ const CourseDetail = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/v1/courses/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/courses/${id}`);
         const foundCourse = res.data;
 
         if (!user?.enrolledCourses?.includes(foundCourse._id)) {
@@ -51,7 +51,7 @@ const CourseDetail = () => {
 
     try {
       await axios.post(
-        "http://localhost:8000/api/v1/xp/complete-video",
+        `${import.meta.env.VITE_API_URL}/api/v1/xp/complete-video`,
         {
           courseId: course._id,
           videoUrl: videoUrl,

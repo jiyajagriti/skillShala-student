@@ -12,17 +12,17 @@ const AllCourses = () => {
     const fetchAndSyncCourses = async () => {
       try {
         // 1. Fetch from admin backend (5000)
-        const res = await axios.get("http://localhost:8000/api/v1/courses");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/courses`);
         const approvedCourses = res.data;
 
         // 2. Sync to student backend (8000)
         for (const course of approvedCourses) {
-          await axios.post("http://localhost:8000/api/v1/courses/sync", course);
+          await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/courses/sync`, course);
         }
         console.log("✅ Synced all courses to student DB");
 
         // 3. Fetch from student backend
-        const studentRes = await axios.get("http://localhost:8000/api/v1/courses");
+        const studentRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/courses`);
         setCourses(studentRes.data);
         console.log("📦 Loaded from student DB:", studentRes.data);
       } catch (err) {
@@ -46,7 +46,7 @@ const AllCourses = () => {
     if (!user) return alert("Please login first");
 
     try {
-      const res = await fetch("http://localhost:8000/api/v1/courses/enroll", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/courses/enroll`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

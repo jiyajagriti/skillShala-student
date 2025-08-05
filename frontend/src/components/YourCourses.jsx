@@ -22,7 +22,7 @@ const YourCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/v1/courses");
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/courses`);
         const data = await res.json();
         setCourses(data);
       } catch (err) {

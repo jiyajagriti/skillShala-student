@@ -12,7 +12,7 @@ router.post("/queries", protect, async (req, res) => {
   try {
     const user = req.user; // from authMiddleware
 
-    const response = await axios.post("http://localhost:5000/api/queries", {
+    const response = await axios.post("https://skillshala-admin-seller-backend.onrender.com/api/queries", {
       studentName: user.name,
       studentEmail: user.email,
       course: user.course || "",

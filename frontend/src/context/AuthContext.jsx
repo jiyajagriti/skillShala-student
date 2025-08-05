@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/v1/auth/me", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const signup = async (name, email, password) => {
-    const res = await fetch("http://localhost:8000/api/v1/auth/signup", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    const res = await fetch("http://localhost:8000/api/v1/auth/login", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     }
   
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/auth/me", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

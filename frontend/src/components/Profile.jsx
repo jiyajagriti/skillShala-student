@@ -29,7 +29,7 @@ const Profile = () => {
       setUploadStatus("Uploading...");
 
       const res = await axios.put(
-        "http://localhost:8000/api/v1/auth/update-profile-pic",
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/update-profile-pic`,
         formData,
         {
           headers: {

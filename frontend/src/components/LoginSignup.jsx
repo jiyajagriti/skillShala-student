@@ -141,9 +141,7 @@ const LoginSignup = () => {
               }
               className="w-full my-2 px-4 py-2 text-sm rounded-md bg-[#eee] outline-none"
             />
-            <a href="#" className="text-xs mt-3 text-gray-700">
-              Forgot Your Password?
-            </a>
+
             <button
               onClick={handleLogin}
               className="mt-3 bg-[#512da8] text-white text-xs px-12 py-2 rounded-md uppercase font-semibold tracking-wider"
@@ -163,25 +161,25 @@ const LoginSignup = () => {
 const SocialIcons = () => (
   <>
     <a
-      href="#"
+      href="https://www.google.com/"
       className="w-10 h-10 border border-gray-300 rounded-md flex items-center justify-center text-sm"
     >
       <FaGooglePlusG />
     </a>
     <a
-      href="#"
+      href="https://www.facebook.com/"
       className="w-10 h-10 border border-gray-300 rounded-md flex items-center justify-center text-sm"
     >
       <FaFacebookF />
     </a>
     <a
-      href="#"
+      href="https://github.com/jiyajagriti"
       className="w-10 h-10 border border-gray-300 rounded-md flex items-center justify-center text-sm"
     >
       <FaGithub />
     </a>
     <a
-      href="#"
+      href="https://www.linkedin.com/in/jiya-jagriti-ba2815272/"
       className="w-10 h-10 border border-gray-300 rounded-md flex items-center justify-center text-sm"
     >
       <FaLinkedinIn />
