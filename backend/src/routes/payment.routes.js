@@ -4,6 +4,7 @@ import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import 'dotenv/config';
 import Payment from '../model/payment.model.js'; // <-- ensure .js if using ESM
+import { protect } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ const razorpay = new Razorpay({
 });
 
 // ROUTE 1: Create Order  POST /api/payment/order
-router.post('/order', async (req, res) => {
+router.post('/order', protect, async (req, res) => {
   try {
     const { amount } = req.body;
 
@@ -41,9 +42,9 @@ router.post('/order', async (req, res) => {
 });
 
 // ROUTE 2: Verify Payment  POST /api/payment/verify
-router.post('/verify', async (req, res) => {
+router.post('/verify', protect, async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseId } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -71,6 +72,35 @@ router.post('/verify', async (req, res) => {
     });
 
     await payment.save();
+
+    // If courseId is provided, enroll the user in the course
+    if (courseId && req.user) {
+      try {
+        console.log('🎯 Attempting to enroll user in course:', { courseId, userId: req.user._id });
+        const { User } = await import('../model/user.model.js');
+        const { Course } = await import('../model/course.model.js');
+        
+        const user = await User.findById(req.user._id);
+        const course = await Course.findById(courseId);
+        
+        console.log('👤 User found:', !!user);
+        console.log('📚 Course found:', !!course);
+        console.log('📋 Current enrolled courses:', user?.enrolledCourses);
+        
+        if (user && course && !user.enrolledCourses.includes(courseId)) {
+          user.enrolledCourses.push(courseId);
+          await user.save();
+          console.log('✅ User enrolled in course after payment verification');
+          console.log('📋 Updated enrolled courses:', user.enrolledCourses);
+        } else if (user && user.enrolledCourses.includes(courseId)) {
+          console.log('⚠️ User already enrolled in this course');
+        }
+      } catch (enrollError) {
+        console.error('❌ Enrollment error during payment verification:', enrollError);
+      }
+    } else {
+      console.log('❌ Missing courseId or user for enrollment:', { courseId: !!courseId, user: !!req.user });
+    }
 
     return res.status(200).json({ message: 'Payment verified successfully' });
   } catch (err) {

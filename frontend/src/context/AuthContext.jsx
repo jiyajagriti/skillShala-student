@@ -74,15 +74,20 @@ export const AuthProvider = ({ children }) => {
     }
   
     try {
+      console.log('🔄 Fetching updated user data...');
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log('📋 Updated user data:', res.data);
+      console.log('📚 Enrolled courses:', res.data.enrolledCourses);
+      
       setUser(res.data);
   
       // ✅ Update localStorage with latest user data
       localStorage.setItem("skillshala-user", JSON.stringify({ user: res.data }));
+      console.log('💾 Updated localStorage with new user data');
   
     } catch (err) {
       console.error("❌ Failed to refresh user:", err.message);

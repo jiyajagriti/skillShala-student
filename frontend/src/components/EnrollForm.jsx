@@ -67,13 +67,15 @@ const EnrollForm = () => {
         order_id,
         handler: async function (response) {
           try {
-            // 4️⃣ Verify payment on backend
-            await axios.post(
+            // 4️⃣ Verify payment on backend and enroll user
+            console.log('🔍 Verifying payment and enrolling user...');
+            const verifyResponse = await axios.post(
               `${import.meta.env.VITE_API_URL}/api/v1/payment/verify`,
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
+                courseId: course._id,
               },
               {
                 headers: {
@@ -81,21 +83,18 @@ const EnrollForm = () => {
                 },
               }
             );
+            console.log('✅ Payment verification response:', verifyResponse.data);
 
-            // 5️⃣ Enroll the user after successful payment
-            await axios.post(
-              `${import.meta.env.VITE_API_URL}/api/v1/enroll`,
-              { courseId: course._id },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("skillshala-token")}`,
-                },
-              }
-            );
-
+            console.log('🔄 Refreshing user data...');
             await refreshUser();
+            console.log('✅ User data refreshed');
+            
             alert("🎉 Payment successful & enrolled!");
-            navigate("/your-courses");
+            
+            // Add a small delay to ensure data is properly updated
+            setTimeout(() => {
+              navigate("/your-courses");
+            }, 500);
           } catch (err) {
             console.error("Payment verification failed", err);
             alert("❌ Payment verification failed");

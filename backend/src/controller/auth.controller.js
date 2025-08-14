@@ -78,10 +78,23 @@ export const login = async (req, res) => {
 
 // Get current user
 export const getMe = async (req, res) => {
-  const user = await User.findById(req.user._id).select("-password");
-  if (!user) return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-  res.status(200).json(user);
+    console.log('👤 User data from /me endpoint:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      enrolledCourses: user.enrolledCourses,
+      enrolledCoursesLength: user.enrolledCourses?.length
+    });
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('❌ Error in getMe:', error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 
