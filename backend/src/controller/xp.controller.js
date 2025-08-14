@@ -48,19 +48,7 @@ export const completeVideo = async (req, res) => {
       user.xpHistory.push({ date: today, xp: 10 });
     }
 
-    // 5. Update activity streak (meaningful action)
-    if (!user.lastLoginDates) {
-      user.lastLoginDates = [];
-    }
-    if (!user.lastLoginDates.includes(today)) {
-      user.lastLoginDates.push(today);
-      if (user.lastLoginDates.length > 30) {
-        user.lastLoginDates = user.lastLoginDates.slice(-30);
-      }
-      console.log(`📅 Updated activity streak for user ${user.name} after video completion`);
-    }
-
-    await user.save();
+    await user.save(); // Only save after XP and video completion
 
     // 6. Check if all videos of course are completed
     const completedVideos = user.completedVideos.filter(v => v.courseId === courseId);

@@ -2,11 +2,12 @@
 import express from "express";
 import axios from "axios";
 import { protect } from "../middlewares/authMiddleware.js";
+import { updateActivityStreak } from "../middlewares/loginStreak.js";
 
 const router = express.Router();
 
 // POST query => forward to admin
-router.post("/queries", protect, async (req, res) => {
+router.post("/queries", protect, updateActivityStreak, async (req, res) => {
   const { question } = req.body;
 
   try {

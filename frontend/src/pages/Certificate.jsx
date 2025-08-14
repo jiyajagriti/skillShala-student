@@ -19,7 +19,6 @@ const Certificate = () => {
         setCourse(res.data);
       } catch (err) {
         console.error("Failed to load course:", err.message);
-        // Show user-friendly error message
         alert("Failed to load course details. Please try again.");
       }
     };

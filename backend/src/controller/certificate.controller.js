@@ -25,7 +25,7 @@ export const generateCertificate = async (req, res) => {
   
       const newCertificate = await Certificate.create({
         userId,
-        courseId, // ✅ Store actual ID for later access
+        courseId, 
         courseTitle: course.title,
         userName: user.name,
         certificateId: uuidv4(),

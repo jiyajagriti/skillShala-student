@@ -14,22 +14,8 @@ export const submitQuery = async (req, res) => {
       question,
     });
 
-    // Update activity streak on query submission (meaningful action)
-    const user = await User.findById(req.user._id);
-    if (user) {
-      const today = new Date().toDateString();
-      if (!user.lastLoginDates) {
-        user.lastLoginDates = [];
-      }
-      if (!user.lastLoginDates.includes(today)) {
-        user.lastLoginDates.push(today);
-        if (user.lastLoginDates.length > 30) {
-          user.lastLoginDates = user.lastLoginDates.slice(-30);
-        }
-        console.log(`📅 Updated activity streak for user ${user.name} after query submission`);
-      }
-      await user.save();
-    }
+    // Remove direct update of lastLoginDates here
+    // Only save after query creation, not for streak
 
     res.status(201).json({ message: "Query submitted successfully", query });
   } catch (error) {

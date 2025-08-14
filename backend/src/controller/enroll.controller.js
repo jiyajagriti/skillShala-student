@@ -43,22 +43,10 @@ export const enrollInCourse = async (req, res) => {
     user.enrolledCourses.push(courseId);
     
     // Update activity streak on course enrollment (meaningful action)
-    const today = new Date().toDateString();
-    if (!user.lastLoginDates) {
-      user.lastLoginDates = [];
-    }
-    if (!user.lastLoginDates.includes(today)) {
-      user.lastLoginDates.push(today);
-      if (user.lastLoginDates.length > 30) {
-        user.lastLoginDates = user.lastLoginDates.slice(-30);
-      }
-      console.log(`📅 Updated activity streak for user ${user.name} after course enrollment`);
-    }
-    
-    await user.save();
+    await user.save(); // Only save after enrollment
     console.log("✅ Course added to user");
 
-    // 🔄 Sync to Admin Panel
+    // Sync to Admin Panel
     try {
       await axios.patch(`https://skillshala-admin-seller-backend.onrender.com/api/users/${user.email}/update-course`, {
         course: course.title,
@@ -68,7 +56,7 @@ export const enrollInCourse = async (req, res) => {
       console.error("❌ Sync to admin failed:", err.message);
     }
 
-    // ✅ Respond success
+    // Respond success
     res.status(200).json({
       message: "Enrolled successfully",
       enrolledCourses: user.enrolledCourses,
@@ -80,7 +68,7 @@ export const enrollInCourse = async (req, res) => {
   }
 };
 
-// ✅ Fetch all courses (utility function, optional)
+// Fetch all courses
 export const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find({});

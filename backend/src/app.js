@@ -8,6 +8,7 @@ import enrollRoutes from "./routes/enroll.routes.js";
 import { startCourseSyncJob } from "./utils/courseSyncJob.js";
 import xpRoutes from "./routes/xp.routes.js";
 import certificateRoutes from "./routes/certificate.routes.js";
+import paymentRoutes from "./routes/payment.routes.js"
 
 
 const app = express()
@@ -34,6 +35,8 @@ app.use("/api/v1/enroll", enrollRoutes);
 app.use("/api/v1/xp", xpRoutes);
 
 app.use("/api/v1/certificates", certificateRoutes);
+
+app.use("/api/v1/payment", paymentRoutes);
 
 startCourseSyncJob();
 

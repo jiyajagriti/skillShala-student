@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
 
     const user = await User.create({ name, email, password });
 
-    // ✅ Sync to Admin Panel backend
+    // Sync to Admin Panel backend
     try {
       await axios.post("https://skillshala-admin-seller-backend.onrender.com/api/users", {
         name,
@@ -60,19 +60,8 @@ export const login = async (req, res) => {
   if (!user || !(await user.matchPassword(password)))
     return res.status(401).json({ message: "Invalid credentials" });
 
-  // Update activity streak on login (meaningful action)
-  const today = new Date().toDateString();
-  if (!user.lastLoginDates) {
-    user.lastLoginDates = [];
-  }
-  if (!user.lastLoginDates.includes(today)) {
-    user.lastLoginDates.push(today);
-    if (user.lastLoginDates.length > 30) {
-      user.lastLoginDates = user.lastLoginDates.slice(-30);
-    }
-    console.log(`📅 Updated activity streak for user ${user.name} on login`);
-  }
-  await user.save();
+  // Remove direct update of lastLoginDates here
+  await user.save(); // Remove this line if it was only for streak
 
   res.json({
     token: generateToken(user._id),
@@ -92,11 +81,11 @@ export const getMe = async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
   if (!user) return res.status(404).json({ message: "User not found" });
 
-  res.status(200).json(user); // ✅ this should include user.profilePic
+  res.status(200).json(user);
 };
 
 
-// ✅ Update profile picture controller
+// Update profile picture controller
 export const updateProfilePic = async (req, res) => {
   try {
     const userId = req.user._id;
