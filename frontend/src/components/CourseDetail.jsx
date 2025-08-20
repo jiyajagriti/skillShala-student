@@ -38,10 +38,18 @@ const CourseDetail = () => {
 
   const triggerConfetti = () => {
     confetti({
-      particleCount: 100,
-      spread: 90,
-      origin: { x: 1, y: 1 }, // bottom right
-      angle: 270,
+      particleCount: 80,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.6 },
+      zIndex: 1000,
+    });
+    confetti({
+      particleCount: 80,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.6 },
+      zIndex: 1000,
     });
   };
 

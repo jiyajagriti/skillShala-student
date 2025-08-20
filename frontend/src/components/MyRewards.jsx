@@ -51,10 +51,11 @@ const MyRewards = () => {
           });
 
           confetti({
-            particleCount: 80,
-            spread: 70,
-            origin: { x: 1, y: 1 },
-            scalar: 0.8,
+            particleCount: 120,
+            spread: 100,
+            origin: { x: 0.5, y: 0.6 },
+            startVelocity: 35,
+            zIndex: 1000,
           });
         }
 

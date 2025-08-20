@@ -2,7 +2,7 @@ import { User } from "../model/user.model.js";
 import { Course } from "../model/course.model.js";
 import axios from "axios";
 
-// ✅ Enroll in a course
+//  Enroll in a course
 export const enrollInCourse = async (req, res) => {
   try {
     console.log("🔥 Enroll API hit");

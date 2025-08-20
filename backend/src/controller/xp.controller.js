@@ -69,7 +69,7 @@ export const completeVideo = async (req, res) => {
       }
     }
 
-    res.status(200).json({ message: "✅ Video completed and XP awarded" });
+    res.status(200).json({ message: "Video completed and XP awarded" });
   } catch (err) {
     console.error("❌ Error awarding XP:", err.message);
     res.status(500).json({ message: "Internal server error" });
